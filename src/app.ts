@@ -6,17 +6,15 @@ import { initializeLocalPassport } from './comman/strategy/local-strategy';
 import authRouter from './routes/auth.router';
 import { AuthService } from './services/auth.service';
 import { authenticateToken } from './comman/middlewares/auth.middleware';
-import { DataSource } from 'typeorm';
 import cors from 'cors';
 import customerRouter from './routes/customer.router';
-import { UserEntity } from './models/user.model';
-import { CustomerEntity } from './models/customer.model';
 import dotenv from 'dotenv';
+import {AppDataSource} from "./database/postgresql/database"  // Veritabanı bağlantısı için
 
 dotenv.config(); 
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;  // Port'u ortam değişkenlerinden al
 
 // Initialize AuthService
 const authService = new AuthService();
@@ -37,7 +35,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Initialize Passport
 app.use(passport.initialize());
 
 // Routes
@@ -48,22 +45,7 @@ app.get('/', authenticateToken, (req, res) => {
   res.send('Hello NOD Readers!');
 });
 
-// Initialize DataSource
-const AppDataSource = new DataSource({
-  type: 'postgres',
-  host: process.env.POSTGRES_HOST,
-  port: parseInt(process.env.POSTGRES_PORT, 10),
-  username: process.env.POSTGRES_USERNAME,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  url: `${process.env.POSTGRES_URL}`, 
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  entities: [UserEntity, CustomerEntity],
-  synchronize: false,
-});
-
+// Veritabanı bağlantısını başlat ve server'ı çalıştır
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
