@@ -1,0 +1,11 @@
+{
+    "type": "postgres",
+    "host": "dpg-cr117ubtq21c73cn6hkg-a",
+    "port": 5432,
+    "username": "postgresql_server_n271_user",
+    "password": "Q2djSOzyF2fnNDLHzMPyNpJBp2YciX8R",
+    "database": "postgresql_server_n271",
+    "entities": ["src/models/**/*.ts"],
+    "synchronize": true
+  }
+  
